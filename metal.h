@@ -1,5 +1,3 @@
-// +build darwin
-
 // Matches with Params type in metal.go
 typedef struct MatrixParams {
   int a_rows, a_cols;

@@ -1,12 +1,7 @@
-//go:build darwin
-// +build darwin
-
 package main
 
 /*
-#cgo LDFLAGS: -framework Metal -framework CoreGraphics -framework Foundation
 #include <stdlib.h>
-#include <stdbool.h>
 #include "metal.h"
 */
 import "C"
@@ -20,13 +15,23 @@ type MatrixParams struct {
 	b_rows, b_cols int32
 }
 
-// Compile the shader source code and initialize pipelines.
-func Compile (metalSourceFile string) {
-	src := C.CString(metalSourceFile)
+// Compile the shader source code and initialize pipelines. The metalSource
+// param contains the contents of an embedded Metal Shading Language file.
+func Compile (metalSource string) {
+	// Wrap string in a C string
+	src := C.CString(metalSource)
+
+	// Free the above string after command queue is initialized
 	defer C.free(unsafe.Pointer(src))
+
+	// Compile the source, initialize pipelines and command queue
 	C.initializePipelineAndCommandQueue(src)
 }
 
+/**
+ * Initializes Metal buffers ahead of matrix operaetions. Creates a C-native MatrixParams struct,
+ * returns an unsafe pointer to be passed into GPU space.
+ */
 func prepareUnsafe (a *Matrix[float32], b *Matrix[float32], c *Matrix[float32]) *(C.MatrixParams) {
 	var a_data unsafe.Pointer
 	var b_data unsafe.Pointer
@@ -57,6 +62,10 @@ func prepareUnsafe (a *Matrix[float32], b *Matrix[float32], c *Matrix[float32]) 
 	return (*C.MatrixParams)(unsafe.Pointer(&params));
 }
 
+/**
+ * Calls the naive matrix multiplication algorithm written in Metal Shading Language, runs
+ * on the GPU.
+ */
 func MetalNaive (a *Matrix[float32], b *Matrix[float32], c *Matrix[float32]) {
 	unsafeParams := prepareUnsafe(a, b, c);
 	metalResults := C.metal_mult_naive(unsafeParams)
@@ -65,14 +74,23 @@ func MetalNaive (a *Matrix[float32], b *Matrix[float32], c *Matrix[float32]) {
 	return
 }
 
+/**
+ * Calls the transposed naive matrix multiplication algorithm written in Metal Shading Language, 
+ * runs on the GPU.
+ */
 func MetalTranspose (a *Matrix[float32], b *Matrix[float32], c *Matrix[float32]) {
-	unsafeParams := prepareUnsafe(a, b, c);
+	t := b.Transpose()
+	unsafeParams := prepareUnsafe(a, t, c);
 	metalResults := C.metal_mult_transpose(unsafeParams)
 	c.Data = unsafe.Slice((*float32)(metalResults), a.Rows * b.Cols)
 
 	return
 }
 
+/**
+ * Calls the matrix multiplication functionality in the Metal Performance Shaders framework,
+ * runs on the GPU.
+ */
 func MPS (a *Matrix[float32], b *Matrix[float32], c *Matrix[float32]) {
 	unsafeParams := prepareUnsafe(a, b, c);
 	metalResults := C.mps_mult(unsafeParams)

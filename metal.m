@@ -97,7 +97,7 @@ initializeMTLBuffers (
   int a_array_size,
   int b_array_size,
   int out_array_size
-  ) {
+) {
   bufferA = [device newBufferWithBytes:a 
     length:a_array_size*data_size_bytes 
     options:MTLResourceStorageModeShared];
@@ -106,6 +106,7 @@ initializeMTLBuffers (
     length:b_array_size*data_size_bytes 
     options:MTLResourceStorageModeShared];
 
+  // Resulting matrix buffer
   bufferC = [device newBufferWithLength:out_array_size*data_size_bytes 
     options:MTLResourceStorageModeShared];
 }
@@ -134,6 +135,7 @@ mps_mult (MatrixParams *params)
     rowBytes:b_cols * sizeof(float)
     dataType:MPSDataTypeFloat32];
 
+  // Output matrix
   MPSMatrixDescriptor *descriptorC = [MPSMatrixDescriptor matrixDescriptorWithDimensions:a_rows
     columns:b_cols
     rowBytes:b_cols * sizeof(float)
@@ -194,14 +196,16 @@ metal_mult (MatrixParams *params, id<MTLComputePipelineState> pipelineState)
       return nil;
     }
 
+    // Sets the context for the appropriate Metal kernel function
     [computeEncoder setComputePipelineState:pipelineState];
 
+    // Indicates the dimensionality of the input matrix to the thread scheduler
     MTLSize threadsPerGrid = MTLSizeMake(params->a_cols, params->a_rows, 1);
 
     // Calculate a threadgroup size.
     // https://developer.apple.com/documentation/metal/calculating_threadgroup_and_grid_sizes?language=objc
-    NSUInteger w = pipelineStateNaive.threadExecutionWidth;
-    NSUInteger h = pipelineStateNaive.maxTotalThreadsPerThreadgroup / w;
+    NSUInteger w = pipelineState.threadExecutionWidth;
+    NSUInteger h = pipelineState.maxTotalThreadsPerThreadgroup / w;
     MTLSize threadsPerThreadgroup = MTLSizeMake(w, h, 1);
 
     [computeEncoder setBytes:params length:16 atIndex:0];
@@ -210,7 +214,8 @@ metal_mult (MatrixParams *params, id<MTLComputePipelineState> pipelineState)
     [computeEncoder setBuffer:bufferC offset:0 atIndex:3];
 
     // Encode the compute command.
-    [computeEncoder dispatchThreads:threadsPerGrid threadsPerThreadgroup:threadsPerThreadgroup];
+    [computeEncoder dispatchThreads:threadsPerGrid 
+      threadsPerThreadgroup:threadsPerThreadgroup];
 
     // End the compute pass.
     [computeEncoder endEncoding];
