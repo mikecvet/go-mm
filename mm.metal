@@ -12,8 +12,8 @@ kernel void matrix_multiply_naive(
   constant float *B,
   device float *C,
   // Indicates the thread's unique position within the entire grid of threads being executed
-  // The uint2 type is a 2D coordinate, with values x and y representing its indices on each axis
-  // This specific value is not provided from the calling code, but provided by the Metal framework
+  // The uint2 type is a 2D coordinate, with fields x and y representing its indices on each axis
+  // This paramter is not directly provided from the calling code, but provided by the Metal framework
   uint2 gid [[thread_position_in_grid]]
 ) {
   if (gid.x >= params->a_rows || gid.y >= params->b_cols) {
@@ -45,8 +45,8 @@ kernel void matrix_multiply_transpose(
   constant float *B,
   device float *C,
   // Indicates the thread's unique position within the entire grid of threads being executed
-  // The uint2 type is a 2D coordinate, with values x and y representing its indices on each axis
-  // This specific value is not provided from the calling code, but provided by the Metal framework
+  // The uint2 type is a 2D coordinate, with fields x and y representing its indices on each axis
+  // This paramter is not directly provided from the calling code, but provided by the Metal framework
   uint2 gid [[thread_position_in_grid]]
 ) {
     if (gid.x >= params->a_rows || gid.y >= params->b_cols) {
