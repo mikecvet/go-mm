@@ -5,6 +5,7 @@ This project is discussed in detail in this blog post, which also explains more 
 
 This program is fairly simple:
 
+```
   ~/code/go-mm ~>> ./go-mm --help
   Usage of ./go-mm:
   -fast
@@ -32,7 +33,8 @@ This program is fairly simple:
   640000 18.00 20.67 1.00
   810000 24.67 28.33 1.33
   1000000 35.00 38.67 2.00
+```
 
 This data can be used to plot a graph of multiplication time in ms, via the provided Python script
 
-[Performance Graph](https://github.com/mikecvet/cnn-rs/blob/master/static/loss.png)
+![Performance Graph](https://github.com/mikecvet/go-mm/blob/master/static/graph.png)
