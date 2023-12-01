@@ -78,6 +78,6 @@ func (b *BenchmarkData) GonumNativeAverage() float64 {
 	return float64(b.GonumNativeCumulative) / float64(b.Iterations)
 }
 
-func (b *BenchmarkData) GonumOpenBLASCumulativeAverage() float64 {
+func (b *BenchmarkData) GonumOpenBLASAverage() float64 {
 	return float64(b.GonumOpenBLASCumulative) / float64(b.Iterations)
 }

@@ -58,10 +58,10 @@ kernel void matrix_multiply_transpose(
 
     // Loop unrolling; improves performance by a notable margin
     for (k = 0; k <= params->a_cols - 4; k += 4) {
-      sum += A[gid.x * params->a_cols + k]     * B[gid.x * params->b_cols + k];
-      sum += A[gid.x * params->a_cols + k + 1] * B[gid.x * params->b_cols + k + 1];
-      sum += A[gid.x * params->a_cols + k + 2] * B[gid.x * params->b_cols + k + 2];
-      sum += A[gid.x * params->a_cols + k + 3] * B[gid.x * params->b_cols + k + 3];
+      sum += A[gid.x * params->a_cols + k]     * B[gid.y * params->b_cols + k];
+      sum += A[gid.x * params->a_cols + k + 1] * B[gid.y * params->b_cols + k + 1];
+      sum += A[gid.x * params->a_cols + k + 2] * B[gid.y * params->b_cols + k + 2];
+      sum += A[gid.x * params->a_cols + k + 3] * B[gid.y * params->b_cols + k + 3];
     }
 
     // Handle any remaining elements

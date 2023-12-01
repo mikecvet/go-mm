@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	//"math"
+	"math"
 	"math/rand"
 	"time"
 
@@ -147,19 +147,20 @@ func trial (aRows, aCols, bRows, bCols int, bdata *BenchmarkData, fast, gpuOnly 
 	}
 
 	// Run GPU-based multiplication
-	// start = time.Now()
-	// MetalNaive(a32, b32, c32)
-	// bdata.TimeMetalNaive(start)
+	start = time.Now()
+	MetalNaive(a32, b32, c32)
+	bdata.TimeMetalNaive(start)
 
 	start = time.Now()
 	MetalTranspose(a32, b32, d32)
 	bdata.TimeMetalTranspose(start)
 
-	// start = time.Now()
-	// MPS(a32, b32, e32)
-	// bdata.TimeMPS(start)
+	start = time.Now()
+	MPS(a32, b32, e32)
+	bdata.TimeMPS(start)
 
-	assertEqualsOrLog[float32]("metal_naive", "metal_transpose", c32, e32)
+	assertEqualsOrLog[float32]("metal_naive", "metal_transpose", c32, d32)
+	assertEqualsOrLog[float32]("metal_transpose", "mps", d32, e32)
 	assertEqualsOrLog[float32]("metal_naive", "mps", c32, e32)
 
 	if (!gpuOnly) {
@@ -184,10 +185,10 @@ func convertDoubleToFloat(data []float64) []float32 {
  * Asserts the two Matrices are equal; if not, prints out the indices which do not match
  */
 func assertEqualsOrLog[T FloatingPoint](s, t string, a, b *Matrix[T]) {
-	//if !a.Equals(b) {
+	if !a.Equals(b) {
 		fmt.Printf("%s != %s\n", s, t)
 		printMismatches[T](a, b)
-	// }
+	}
 }
 
 /**
@@ -195,9 +196,9 @@ func assertEqualsOrLog[T FloatingPoint](s, t string, a, b *Matrix[T]) {
  */
 func printMismatches[T FloatingPoint](c, d *Matrix[T]) {
 	for i := range c.Data {
-		//if math.Abs(float64(c.Data[i] - d.Data[i])) > 0.01 {
-				fmt.Printf("Difference at index %d: lhs = %f, rhs = %f\n", i, c.Data[i], d.Data[i])
-	//	}
+		if math.Abs(float64(c.Data[i] - d.Data[i])) > 0.01 {
+			fmt.Printf("Difference at index %d: lhs = %f, rhs = %f\n", i, c.Data[i], d.Data[i])
+		}
 	}
 }
 
@@ -215,7 +216,7 @@ func printTimes(elements int, bdata *BenchmarkData, fast, gpuOnly bool) {
 			bdata.MetalTransposeAverage(), 
 			bdata.MPSAverage(),
 			bdata.GonumNativeAverage(),
-			bdata.GonumOpenBLASCumulativeAverage())
+			bdata.GonumOpenBLASAverage())
 	} else if gpuOnly {
 		fmt.Printf("%v %.2f %.2f %.2f\n", 
 			elements, 
@@ -230,6 +231,6 @@ func printTimes(elements int, bdata *BenchmarkData, fast, gpuOnly bool) {
 			bdata.MetalTransposeAverage(), 
 			bdata.MPSAverage(),
 			bdata.GonumNativeAverage(),
-			bdata.GonumOpenBLASCumulativeAverage())
+			bdata.GonumOpenBLASAverage())
 	}
 }
