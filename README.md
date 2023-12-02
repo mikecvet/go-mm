@@ -1,6 +1,8 @@
 # go-mm
 This project explores the usage of Apple's Metal-compatible GPUs from Go code, using Objective-C bindings, Metal Shading Library source files, and the Metal Performance Shaders library. The performance of matrix multiplication tasks is compared across a couple different hand-written MSL implementations, the MPS library, Gonum and OpenBLAS, and hand-written Go implementations.
 
+![High Level Overview](https://github.com/mikecvet/go-mm/blob/main/static/high_level.jpg)
+
 This project is discussed in detail in this blog post, which also explains more about how cgo is used and how the Metal APIs work.
 
 This program is fairly simple:
@@ -37,4 +39,4 @@ This program is fairly simple:
 
 This data can be used to plot a graph of multiplication time in ms, via the provided Python script
 
-![Performance Graph](https://github.com/mikecvet/go-mm/blob/master/static/graph.png)
+![Performance Graph](https://github.com/mikecvet/go-mm/blob/main/static/graph.png)
