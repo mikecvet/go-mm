@@ -40,3 +40,5 @@ This program is fairly simple:
 This data can be used to plot a graph of multiplication time in ms, via the provided Python script
 
 ![Performance Graph](https://github.com/mikecvet/go-mm/blob/main/static/graph.png)
+
+![Performance Graph - Fast Implementations](https://github.com/mikecvet/go-mm/blob/main/static/fast.png)
