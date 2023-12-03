@@ -41,4 +41,10 @@ This data can be used to plot a graph of multiplication time in ms, via the prov
 
 ![Performance Graph](https://github.com/mikecvet/go-mm/blob/main/static/graph.png)
 
+Plotting results removing the slowest three methods:
+
 ![Performance Graph - Fast Implementations](https://github.com/mikecvet/go-mm/blob/main/static/fast.png)
+
+Plotting results is trivial through the provided Python script
+
+`~/code/go-mm ~>> python3 plot.py ./z --gpuonly`
