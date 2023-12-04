@@ -3,7 +3,7 @@ This project explores the usage of Apple's Metal-compatible GPUs from Go code, u
 
 ![High Level Overview](https://github.com/mikecvet/go-mm/blob/main/static/high_level.jpg)
 
-This project is discussed in detail in this blog post, which also explains more about how cgo is used and how the Metal APIs work.
+This project is discussed in detail [in this blog post](https://mikecvet.medium.com/programming-apple-gpus-through-go-and-metal-shading-language-a0e7a60a3dba), which also explains more about how cgo is used and how the Metal APIs work.
 
 This program is fairly simple:
 
