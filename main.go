@@ -6,11 +6,11 @@ package main
 import "C"
 
 import (
-	_ "embed"
-	"flag"
-	"fmt"
-	"os"
-	"strconv"
+  _ "embed"
+  "flag"
+  "fmt"
+  "os"
+  "strconv"
 )
 
 const DEFAULT_INCREMENT = 100
@@ -19,24 +19,24 @@ const DEFAULT_INCREMENT = 100
 var source string
 
 func main() {
-	incrValue := DEFAULT_INCREMENT
-	fastFlag := flag.Bool("fast", false, "Enable fast mode")
-	gpuOnlyFlag := flag.Bool("gpu-only", false, "Use GPU only")
-	incrFlag := flag.String("incr", "", "Incremental integer value")
+  incrValue := DEFAULT_INCREMENT
+  fastFlag := flag.Bool("fast", false, "Enable fast mode")
+  gpuOnlyFlag := flag.Bool("gpu-only", false, "Use GPU only")
+  incrFlag := flag.String("incr", "", "Incremental integer value")
 
-	flag.Parse()
+  flag.Parse()
 
-	if *incrFlag != "" {
-		v, err := strconv.Atoi(*incrFlag)
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "Error: Invalid value for --incr: %s\n", *incrFlag)
-			os.Exit(1)
-		}
-		incrValue = v
-	}
+  if *incrFlag != "" {
+    v, err := strconv.Atoi(*incrFlag)
+    if err != nil {
+      fmt.Fprintf(os.Stderr, "Error: Invalid value for --incr: %s\n", *incrFlag)
+      os.Exit(1)
+    }
+    incrValue = v
+  }
 
-	Compile(source)
+  Compile(source)
 
-	// Run benchmarking
-	TimeMultiplication(*fastFlag, *gpuOnlyFlag, incrValue)
+  // Run benchmarking
+  TimeMultiplication(*fastFlag, *gpuOnlyFlag, incrValue)
 }
