@@ -9,7 +9,7 @@ import (
   "unsafe"
 )
 
-// Params matches the definitions in metal.h
+// MatrixParams matches the definitions in metal.h
 type MatrixParams struct {
   a_rows, a_cols int32
   b_rows, b_cols int32

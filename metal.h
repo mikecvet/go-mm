@@ -1,4 +1,4 @@
-// Matches with Params type in metal.go
+// Matches with MatrixParams type in metal.go
 typedef struct MatrixParams {
   int a_rows, a_cols;
   int b_rows, b_cols;
